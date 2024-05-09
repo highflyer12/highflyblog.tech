@@ -7,6 +7,7 @@ import remarkFrontmatter from 'remark-frontmatter'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import { flatRoutes } from 'remix-flat-routes'
 import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 const MODE = process.env.NODE_ENV
 
@@ -21,6 +22,11 @@ export default defineConfig({
 		sourcemap: true,
 	},
 	plugins: [
+		tsconfigPaths(),
+		mdx({
+			remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+			rehypePlugins: [rehypePrettyCode],
+		}),
 		remix({
 			ignoredRouteFiles: ['**/*'],
 			serverModuleFormat: 'esm',
@@ -42,10 +48,7 @@ export default defineConfig({
 				})
 			},
 		}),
-		mdx({
-			remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
-			rehypePlugins: [rehypePrettyCode],
-		}),
+
 		process.env.SENTRY_AUTH_TOKEN
 			? sentryVitePlugin({
 					disable: MODE !== 'production',
