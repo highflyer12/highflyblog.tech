@@ -1,4 +1,5 @@
 # Documented example: https://github.com/superfly/litefs/blob/dec5a7353292068b830001bd2df4830e646f6a2f/cmd/litefs/etc/litefs.yml
+# refer: https://fly.io/docs/litefs/getting-started-docker/
 fuse:
   # Required. This is the mount directory that applications will
   # use to access their SQLite databases.

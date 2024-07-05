@@ -235,7 +235,7 @@ if (!portAvailable && !IS_DEV) {
 	process.exit(1)
 }
 
-const server = app.listen(portToUse, () => {
+const server = app.listen(desiredPort, () => {
 	if (!portAvailable) {
 		console.warn(
 			chalk.yellow(

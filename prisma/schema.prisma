@@ -16,8 +16,14 @@ model User {
   username String  @unique
   name     String?
 
+  discordId    String?
+  convertKitId String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  role String @default("MEMBER")
+  team String @default("red")
 
   image       UserImage?
   password    Password?
@@ -25,6 +31,8 @@ model User {
   roles       Role[]
   sessions    Session[]
   connections Connection[]
+
+  postReads PostRead[]
 }
 
 model Note {
@@ -166,4 +174,18 @@ model Connection {
   userId String
 
   @@unique([providerName, providerId])
+}
+
+model PostRead {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+  clientId  String?
+  postSlug  String
+
+  @@index([userId, postSlug])
+  @@index([clientId, postSlug])
+  @@index([postSlug, createdAt])
+  @@index([createdAt, userId])
 }

@@ -8,6 +8,7 @@ import {
 	type HeadersFunction,
 	type LinksFunction,
 	type MetaFunction,
+	type SerializeFrom,
 } from '@remix-run/node'
 import {
 	Form,
@@ -27,6 +28,7 @@ import { withSentry } from '@sentry/remix'
 import { useRef } from 'react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
+import { type KCDHandle } from '../types/index'
 import { GeneralErrorBoundary } from './components/error-boundary.tsx'
 import { EpicProgress } from './components/progress-bar.tsx'
 import { SearchBar } from './components/search-bar.tsx'
@@ -41,19 +43,34 @@ import {
 } from './components/ui/dropdown-menu.tsx'
 import { Icon, href as iconsHref } from './components/ui/icon.tsx'
 import { EpicToaster } from './components/ui/sonner.tsx'
+import { illustrationImages } from './images.tsx'
+import proseCssUrl from './styles/prose.css?url'
 import tailwindStyleSheetUrl from './styles/tailwind.css?url'
 import { getUserId, logout } from './utils/auth.server.ts'
 import { ClientHintCheck, getHints, useHints } from './utils/client-hints.tsx'
+import { getClientSession } from './utils/client.server.ts'
 import { prisma } from './utils/db.server.ts'
 import { getEnv } from './utils/env.server.ts'
 import { honeypot } from './utils/honeypot.server.ts'
+import { getInstanceInfo } from './utils/litefs.server.ts'
+import { getLoginInfoSession } from './utils/login.server.ts'
 import { combineHeaders, getDomainUrl, getUserImgSrc } from './utils/misc.tsx'
 import { useNonce } from './utils/nonce-provider.ts'
 import { useRequestInfo } from './utils/request-info.ts'
+import { getSession } from './utils/session.server.ts'
 import { type Theme, setTheme, getTheme } from './utils/theme.server.ts'
-import { makeTimings, time } from './utils/timing.server.ts'
+import {
+	getServerTimeHeader,
+	makeTimings,
+	time,
+} from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
+import { getUserInfo } from './utils/user-info.server.ts'
 import { useOptionalUser, useUser } from './utils/user.ts'
+
+export const handle: KCDHandle & { id: string } = {
+	id: 'root',
+} // here, type KCDHandle & { id: string } means handle must have all the properties of KCDHandle and also have an id property of type string
 
 export const links: LinksFunction = () => {
 	return [
@@ -75,6 +92,7 @@ export const links: LinksFunction = () => {
 		//These should match the css preloads above to avoid css as render blocking resource
 		{ rel: 'icon', type: 'image/svg+xml', href: '/favicons/favicon.svg' },
 		{ rel: 'stylesheet', href: tailwindStyleSheetUrl },
+		{ rel: 'stylesheet', href: proseCssUrl },
 	].filter(Boolean)
 }
 
@@ -85,6 +103,9 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	]
 }
 
+export type RootLoaderType = typeof loader
+export type LoaderData = SerializeFrom<typeof loader> // 不用 SerializeFrom的话，use-root-data.ts中的useRootData返回的将会是Promise，而不是root中的data
+
 export async function loader({ request }: LoaderFunctionArgs) {
 	const timings = makeTimings('root loader')
 	const userId = await time(() => getUserId(request), {
@@ -92,6 +113,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		type: 'getUserId',
 		desc: 'getUserId in root',
 	})
+	const session = await getSession(request)
+
+	const primaryInstance = await getInstanceInfo().then(i => i.primaryInstance)
+	const loginInfoSession = await getLoginInfoSession(request)
+	const userForUserInfo = await session.getUser({ timings })
+	const clientSession = await getClientSession(
+		request,
+		session.getUser({ timings }),
+	)
 
 	const user = userId
 		? await time(
@@ -125,26 +155,47 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	const { toast, headers: toastHeaders } = await getToast(request)
 	const honeyProps = honeypot.getInputProps()
 
+	const randomFooterImageKeys = Object.keys(illustrationImages)
+	const randomFooterImageKey = randomFooterImageKeys[
+		Math.floor(Math.random() * randomFooterImageKeys.length)
+	] as keyof typeof illustrationImages
+
+	const headers: HeadersInit = new Headers()
+	// this can lead to race conditions if a child route is also trying to commit
+	// the cookie as well. This is a bug in remix that will hopefully be fixed.
+	// we reduce the likelihood of a problem by only committing if the value is
+	// different.
+	await session.getHeaders(headers)
+	await clientSession.getHeaders(headers)
+	await loginInfoSession.getHeaders(headers)
+	headers.append('Server-Timing', getServerTimeHeader(timings))
+
 	return json(
 		{
-			user,
+			user: { ...user, team: userForUserInfo?.team },
+			userInfo: userForUserInfo
+				? await getUserInfo(userForUserInfo, { request, timings })
+				: null,
 			requestInfo: {
 				hints: getHints(request),
 				origin: getDomainUrl(request),
 				path: new URL(request.url).pathname,
+				flyPrimaryInstance: primaryInstance,
 				userPrefs: {
 					theme: getTheme(request),
+				},
+				session: {
+					email: loginInfoSession.getEmail(),
+					magicLinkVerified: loginInfoSession.getMagicLinkVerified(),
 				},
 			},
 			ENV: getEnv(),
 			toast,
 			honeyProps,
+			randomFooterImageKey,
 		},
 		{
-			headers: combineHeaders(
-				{ 'Server-Timing': timings.toString() },
-				toastHeaders,
-			),
+			headers: combineHeaders(headers, toastHeaders),
 		},
 	)
 }
