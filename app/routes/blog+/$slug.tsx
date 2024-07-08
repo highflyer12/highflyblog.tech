@@ -3,12 +3,12 @@ import {
 	json,
 	type LoaderFunctionArgs,
 } from '@remix-run/node'
-import { useLoaderData, useParams } from '@remix-run/react'
+import { useLoaderData, useMatches, useParams } from '@remix-run/react'
 import React from 'react'
 import { type MdxListItem, type Team } from '../../../types'
 import { BackLink } from '../../components/arrow-button'
 import { Grid } from '../../components/grid'
-import { TeamStats } from '../../components/team-stats'
+import { H2, H6 } from '../../components/typography'
 import { getRankingLeader } from '../../utils/blog'
 import {
 	getBlogReadRankings,
@@ -26,6 +26,7 @@ import {
 import { getServerTimeHeader } from '../../utils/timing.server'
 import { useRootData } from '../../utils/use-root-data'
 import { markAsRead } from '../action+/mark-as-read'
+import { Sidebar } from '../../components/sidebar'
 
 type CatchData = {
 	recommendations: Array<MdxListItem>
@@ -38,19 +39,20 @@ export default function BlogPostScreen() {
 	const data = useLoaderData<typeof loader>()
 	const { requestInfo } = useRootData()
 
-	const { code, dateDisplay, frontmatter } = data.page
+	const { code, dateDisplay, frontmatter, toc } = data.page
+	// console.log('toc', toc)
 	const params = useParams()
 	const { slug } = params
 	const Component = useMdxComponent(code)
-	const permalink = `${requestInfo.origin}/blog/${slug}`
+
+	// generate breadcrumbs
+	const matches = useMatches()
+	console.log('matches', matches)
 
 	const readMarker = React.useRef<HTMLDivElement>(null) // 后面会有<main ref={readMarker}>
 	const isDraft = Boolean(data.page.frontmatter.draft)
 	const isArchived = Boolean(data.page.frontmatter.archived)
-	const categoriesAndKeywords = [
-		...(data.page.frontmatter.categories ?? []),
-		...(data.page.frontmatter.meta?.keywords ?? []),
-	]
+
 	useOnRead({
 		parentElRef: readMarker,
 		time: data.page.readTime?.time,
@@ -61,31 +63,50 @@ export default function BlogPostScreen() {
 	})
 
 	return (
-		<div
-			key={slug}
-			className={
-				data.leadingTeam
-					? `set-color-team-current-${data.leadingTeam.toLowerCase()}`
-					: ''
-			}
-		>
+		<>
 			<Grid className="mb-10 mt-24 lg:mb-24">
 				<div className="col-span-full flex justify-between lg:col-span-8 lg:col-start-3">
-					<BackLink to="/blog">Back to overview</BackLink>
-					<TeamStats
-						totalReads={data.totalReads}
-						rankings={data.readRankings}
-						direction="down"
-						pull="right"
-					/>
+					<BackLink to="/">Back to home</BackLink>
 				</div>
 			</Grid>
-			<div className="prose-light dark:prose-dark prose mb-24 break-words">
-				<main>
-					<Component />
-				</main>
+
+			<Grid as="header" className="mb-12">
+				<div className="col-span-full lg:col-span-8 lg:col-start-3">
+					{isDraft ? (
+						<div className="prose-light dark:prose-dark prose mb-6 max-w-full">
+							{React.createElement(
+								'callout-warning',
+								{},
+								`This blog post is a draft. Please don't share it in its current state.`,
+							)}
+						</div>
+					) : null}
+					{isArchived ? (
+						<div className="prose-light dark:prose-dark prose mb-6 max-w-full">
+							{React.createElement(
+								'callout-warning',
+								{},
+								`This blog post is archived. It's no longer maintained and may contain outdated information.`,
+							)}
+						</div>
+					) : null}
+					<H2>{frontmatter.title}</H2>
+					<H6 as="p" variant="secondary" className="mt-2">
+						{[dateDisplay, data.page.readTime?.text ?? 'quick read']
+							.filter(Boolean)
+							.join(' — ')}
+					</H6>
+				</div>
+			</Grid>
+			<div className="flex justify-between">
+				<div className="prose-light dark:prose-dark prose mb-24 break-words">
+					<main className="ml-8">
+						<Component />
+					</main>
+				</div>
+				<Sidebar toc={toc} />
 			</div>
-		</div>
+		</>
 	)
 }
 

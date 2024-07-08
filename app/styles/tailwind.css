@@ -8,6 +8,7 @@
 		/* --font-mono: here if you got it... */
 
 		/* prefixed with foreground because it should look good on the background */
+		/* use HSL (Hue, Saturation, Lightness) format for color definitions.*/
 		--foreground-destructive: 345 82.7% 40.8%;
 
 		--background: 0 0% 100%;
@@ -26,10 +27,12 @@
 		--input: 214.3 31.8% 91.4%;
 		--input-invalid: 0 84.2% 60.2%;
 
-		--primary: 222.2 47.4% 11.2%;
+		/* --primary: 222.2 47.4% 11.2%; */
+		--primary: 245 100% 60%;
 		--primary-foreground: 210 40% 98%;
 
-		--secondary: 210 20% 83%;
+		/* --secondary: 210 20% 83%; */
+		--secondary: 209 56% 92%;
 		--secondary-foreground: 222.2 47.4% 11.2%;
 
 		--accent: 210 40% 90%;

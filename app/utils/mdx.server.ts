@@ -21,7 +21,6 @@ const checkCompiledValue = (value: unknown) =>
 const defaultTTL = 1000 * 60 * 60 * 24 * 14 // 2 weeks
 const defaultStaleWhileRevalidate = 1000 * 60 * 60 * 24 * 365 * 100 // 100 years
 
-// 这个函数的作用是获取mdx页面
 export async function getMdxPage(
 	{
 		contentDir,

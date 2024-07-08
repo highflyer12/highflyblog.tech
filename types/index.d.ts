@@ -4,12 +4,18 @@
 
 export type GitHubFile = { path: string; content: string }
 
+export type TocItem = {
+	text: string
+	url: string
+	depth: number
+}
 type MdxPage = {
 	code: string
 	slug: string
 	editLink: string
 	readTime?: ReturnType<typeof calculateReadingTime>
 	dateDisplay?: string
+	toc: Array<TocItem>
 
 	/**
 	 * It's annoying that all these are set to optional I know, but there's

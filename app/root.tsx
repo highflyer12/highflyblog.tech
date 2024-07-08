@@ -30,6 +30,7 @@ import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
 import { type KCDHandle } from '../types/index'
 import { GeneralErrorBoundary } from './components/error-boundary.tsx'
+import { Navbar } from './components/navbar.tsx'
 import { EpicProgress } from './components/progress-bar.tsx'
 import { SearchBar } from './components/search-bar.tsx'
 import { useToast } from './components/toaster.tsx'
@@ -44,6 +45,7 @@ import {
 import { Icon, href as iconsHref } from './components/ui/icon.tsx'
 import { EpicToaster } from './components/ui/sonner.tsx'
 import { illustrationImages } from './images.tsx'
+import appStyles from './styles/app.css?url'
 import proseCssUrl from './styles/prose.css?url'
 import tailwindStyleSheetUrl from './styles/tailwind.css?url'
 import { getUserId, logout } from './utils/auth.server.ts'
@@ -58,6 +60,7 @@ import { combineHeaders, getDomainUrl, getUserImgSrc } from './utils/misc.tsx'
 import { useNonce } from './utils/nonce-provider.ts'
 import { useRequestInfo } from './utils/request-info.ts'
 import { getSession } from './utils/session.server.ts'
+import { TeamProvider } from './utils/team-provider.tsx'
 import { type Theme, setTheme, getTheme } from './utils/theme.server.ts'
 import {
 	getServerTimeHeader,
@@ -67,6 +70,7 @@ import {
 import { getToast } from './utils/toast.server.ts'
 import { getUserInfo } from './utils/user-info.server.ts'
 import { useOptionalUser, useUser } from './utils/user.ts'
+import logoUrl from '/deer-log.svg'
 
 export const handle: KCDHandle & { id: string } = {
 	id: 'root',
@@ -93,6 +97,7 @@ export const links: LinksFunction = () => {
 		{ rel: 'icon', type: 'image/svg+xml', href: '/favicons/favicon.svg' },
 		{ rel: 'stylesheet', href: tailwindStyleSheetUrl },
 		{ rel: 'stylesheet', href: proseCssUrl },
+		{ rel: 'stylesheet', href: appStyles },
 	].filter(Boolean)
 }
 
@@ -288,7 +293,8 @@ function App() {
 			<div className="flex h-screen flex-col justify-between">
 				<header className="container py-6">
 					<nav className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap md:gap-8">
-						<Logo />
+						{/* <Logo /> */}
+						<Navbar />
 						<div className="ml-auto hidden max-w-sm flex-1 sm:block">
 							{searchBar}
 						</div>
@@ -323,12 +329,11 @@ function App() {
 function Logo() {
 	return (
 		<Link to="/" className="group grid leading-snug">
-			<span className="font-light transition group-hover:-translate-x-1">
-				epic
-			</span>
-			<span className="font-bold transition group-hover:translate-x-1">
-				notes
-			</span>
+			<img
+				className="h-16 w-16 rounded-full object-cover"
+				alt={'LOGO'}
+				src={logoUrl}
+			/>
 		</Link>
 	)
 }
@@ -336,9 +341,11 @@ function Logo() {
 function AppWithProviders() {
 	const data = useLoaderData<typeof loader>()
 	return (
-		<HoneypotProvider {...data.honeyProps}>
-			<App />
-		</HoneypotProvider>
+		<TeamProvider>
+			<HoneypotProvider {...data.honeyProps}>
+				<App />
+			</HoneypotProvider>
+		</TeamProvider>
 	)
 }
 

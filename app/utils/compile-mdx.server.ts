@@ -15,6 +15,8 @@ import remarkSlug from 'remark-slug'
 import type * as U from 'unified'
 import { visit } from 'unist-util-visit'
 import { type GitHubFile } from '../../types'
+import { type TocItem } from '../../types'
+import { remarkToc } from './toc.server.ts'
 import * as twitter from './twitter.server.ts'
 
 function handleEmbedderError({ url }: { url: string }) {
@@ -269,6 +271,7 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
 		keyName: 'path',
 		valueName: 'content',
 	})
+	const toc: Array<TocItem> = []
 
 	try {
 		const { frontmatter, code } = await bundleMDX({
@@ -277,6 +280,7 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
 			mdxOptions(options) {
 				options.remarkPlugins = [
 					...(options.remarkPlugins ?? []),
+					[remarkToc, { exportRef: toc }],
 					remarkSlug,
 					[remarkAutolinkHeadings, { behavior: 'wrap' }],
 					gfm,
@@ -295,6 +299,7 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
 			code,
 			readTime,
 			frontmatter: frontmatter as FrontmatterType,
+			toc,
 		}
 	} catch (error: unknown) {
 		console.error(`Compilation error for slug: `, slug)
