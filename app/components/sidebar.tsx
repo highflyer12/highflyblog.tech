@@ -7,16 +7,16 @@ import { type TocItem } from '../../types'
 
 // NavLink component
 const NavLink = ({ ...props }) => {
-	const { children, href = '', className = '', active = '' } = props
+	const {
+		children,
+		href = '',
+		className = '',
+		active = '',
+		currentHref = '',
+	} = props
 
-	const [pathname, setPathname] = useState('/')
-
-	const isActive = pathname == href
+	const isActive = currentHref == href
 	const activeClass = isActive ? active : ''
-
-	useEffect(() => {
-		setPathname(window.location.hash)
-	}, [props])
 
 	return (
 		<Link to={href} {...props} className={`${activeClass} ${className}`}>
@@ -25,31 +25,40 @@ const NavLink = ({ ...props }) => {
 	)
 }
 
-// Title component
-const Title = ({ children }: { children: React.ReactNode }) => (
-	<h3 className="px-4 pb-3 font-medium text-gray-800 md:px-8">{children}</h3>
-)
-
-// Sections List
-const SectionsList = ({ toc }: { toc: Array<TocItem> }) => (
-	<div className="px-4 text-gray-600 md:px-8">
-		<ul>
-			{toc?.map((item, idx) => (
-				<li key={idx}>
-					<NavLink
-						href={item?.url}
-						active="text-primary border-primary"
-						className="block w-full border-l px-4 py-2 duration-150 hover:border-black hover:text-gray-900"
-					>
-						{item?.text}
-					</NavLink>
-				</li>
-			))}
-		</ul>
-	</div>
-)
-
 export const Sidebar = ({ toc }: { toc: Array<TocItem> }) => {
+	const [currentHref, setCurrentHref] = useState('')
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			entries => {
+				const visibleEntries = entries.filter(entry => entry.isIntersecting)
+				if (visibleEntries.length > 0) {
+					// Sort entries by their position in the viewport
+					const sortedEntries = visibleEntries.sort(
+						(a, b) =>
+							a.target.getBoundingClientRect().top -
+							b.target.getBoundingClientRect().top,
+					)
+					// Set the first visible entry as the current active link
+					setCurrentHref(sortedEntries[0].target.getAttribute('href') ?? '')
+				}
+			},
+			{ threshold: 0 }, // Adjust threshold to suit your needs
+		)
+
+		const interestedHashs = toc.map(item => item.url)
+		const links = Array.from(document.querySelectorAll('a')).filter(link =>
+			interestedHashs.includes(link?.getAttribute('href') ?? 'impossibleHash'),
+		)
+		links.forEach(link => {
+			observer.observe(link)
+		})
+
+		return () => {
+			links.forEach(link => {
+				observer.unobserve(link)
+			})
+		}
+	}, [toc])
 	return (
 		<>
 			<nav className="fixed right-0 top-0 z-40 h-full w-full space-y-8 overflow-auto border-r bg-white sm:w-80">
@@ -67,6 +76,7 @@ export const Sidebar = ({ toc }: { toc: Array<TocItem> }) => {
 												href={item?.url}
 												active="text-primary border-primary"
 												className="block w-full border-l px-4 py-2 duration-150 hover:border-black hover:text-gray-900"
+												currentHref={currentHref}
 											>
 												{item?.text}
 											</NavLink>
