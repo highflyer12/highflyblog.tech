@@ -64,6 +64,16 @@ export function getErrorMessage(error: unknown) {
 	return 'Unknown Error'
 }
 
+/** colors: { red: {
+      DEFAULT: '#ff0000',
+      500: '#e00000',
+      700: '#c00000'
+    }, green: '#00ff00', blue: {
+      DEFAULT: '#0000ff',
+      700: '#0000e0' }}    to:
+	[  { red: ['', '500', '700'] }, 'green', { blue: ['', '700'] }] 
+	实际上就是获取theme中的所有可能的颜色名及其shade，忽略颜色的具体值，因为我们写css class的时候，只需要颜色名   
+	*/
 function formatColors() {
 	const colors = []
 	for (const [key, color] of Object.entries(extendedTheme.colors)) {
@@ -79,6 +89,7 @@ function formatColors() {
 	return colors
 }
 
+// * extendTailwindMerge is Function to 【create merge function】 with custom config which extends the default config. provide extendTailwindMerge a configExtension object which gets merged with the default config.
 const customTwMerge = extendTailwindMerge<string, string>({
 	extend: {
 		theme: {
@@ -95,6 +106,21 @@ const customTwMerge = extendTailwindMerge<string, string>({
 	},
 })
 
+/**
+ * 解决什么问题：这里，这个组件有一些基础的css样式，MySlightlyModifiedInput通过className进一步明确了一些样式。但是由于css cascade的原因，这里"p-3"并不会有效果。【因为"p-3"相对于px-2 py-1来说优先级更低】。这就导致通过className提供的css样式居然不生效的问题！因此需要一个解决方案，这里就是通过cn函数来解决。
+ * function MyGenericInput(props) {
+    const className = `border rounded px-2 py-1 ${props.className || ''}`
+    return <input {...props} className={className} />
+}
+function MySlightlyModifiedInput(props) {
+    return (
+        <MyGenericInput
+            {...props}
+            className="p-3" // ← 
+        />
+    )
+}
+ */
 export function cn(...inputs: ClassValue[]) {
 	return customTwMerge(clsx(inputs))
 }

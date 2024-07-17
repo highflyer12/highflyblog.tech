@@ -13,6 +13,7 @@ const sizeClassName = {
 	md: 'w-5 h-5',
 	lg: 'w-6 h-6',
 	xl: 'w-7 h-7',
+	asImg: 'w-16 h-16',
 } as const
 
 type Size = keyof typeof sizeClassName

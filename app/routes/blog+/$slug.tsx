@@ -1,14 +1,15 @@
+//TODO - 调整好TOC的布局
 import {
 	type HeadersFunction,
 	json,
 	type LoaderFunctionArgs,
 } from '@remix-run/node'
-import { useLoaderData, useMatches, useParams } from '@remix-run/react'
+import { useLoaderData, useParams } from '@remix-run/react'
 import React from 'react'
 import { type MdxListItem, type Team } from '../../../types'
-import { BackLink } from '../../components/arrow-button'
 import { Grid } from '../../components/grid'
-import { H2, H6 } from '../../components/typography'
+import { Sidebar } from '../../components/sidebar'
+import { H1, H6 } from '../../components/typography'
 import { getRankingLeader } from '../../utils/blog'
 import {
 	getBlogReadRankings,
@@ -26,7 +27,7 @@ import {
 import { getServerTimeHeader } from '../../utils/timing.server'
 import { useRootData } from '../../utils/use-root-data'
 import { markAsRead } from '../action+/mark-as-read'
-import { Sidebar } from '../../components/sidebar'
+import { Heart } from '../../components/heart'
 
 type CatchData = {
 	recommendations: Array<MdxListItem>
@@ -40,14 +41,10 @@ export default function BlogPostScreen() {
 	const { requestInfo } = useRootData()
 
 	const { code, dateDisplay, frontmatter, toc } = data.page
-	// console.log('toc', toc)
+	console.log('toc', toc)
 	const params = useParams()
 	const { slug } = params
 	const Component = useMdxComponent(code)
-
-	// generate breadcrumbs
-	const matches = useMatches()
-	console.log('matches', matches)
 
 	const readMarker = React.useRef<HTMLDivElement>(null) // 后面会有<main ref={readMarker}>
 	const isDraft = Boolean(data.page.frontmatter.draft)
@@ -64,12 +61,6 @@ export default function BlogPostScreen() {
 
 	return (
 		<>
-			<Grid className="mb-10 mt-24 lg:mb-24">
-				<div className="col-span-full flex justify-between lg:col-span-8 lg:col-start-3">
-					<BackLink to="/">Back to home</BackLink>
-				</div>
-			</Grid>
-
 			<Grid as="header" className="mb-12">
 				<div className="col-span-full lg:col-span-8 lg:col-start-3">
 					{isDraft ? (
@@ -90,7 +81,7 @@ export default function BlogPostScreen() {
 							)}
 						</div>
 					) : null}
-					<H2>{frontmatter.title}</H2>
+					<H1>{frontmatter.title}</H1>
 					<H6 as="p" variant="secondary" className="mt-2">
 						{[dateDisplay, data.page.readTime?.text ?? 'quick read']
 							.filter(Boolean)
@@ -99,12 +90,12 @@ export default function BlogPostScreen() {
 				</div>
 			</Grid>
 			<div className="flex justify-between">
-				<div className="prose-light dark:prose-dark prose mb-24 break-words">
-					<main className="ml-8">
-						<Component />
-					</main>
+				<main className="prose-light dark:prose-dark prose mb-24 ml-8 break-words">
+					<Component />
+				</main>
+				<div>
+					<Sidebar toc={toc} />
 				</div>
-				<Sidebar toc={toc} />
 			</div>
 		</>
 	)

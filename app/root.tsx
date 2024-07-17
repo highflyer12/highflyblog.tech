@@ -29,6 +29,7 @@ import { useRef } from 'react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
 import { type KCDHandle } from '../types/index'
+import { DropDown } from './components/drop-down-menu.tsx'
 import { GeneralErrorBoundary } from './components/error-boundary.tsx'
 import { Navbar } from './components/navbar.tsx'
 import { EpicProgress } from './components/progress-bar.tsx'
@@ -46,6 +47,7 @@ import { Icon, href as iconsHref } from './components/ui/icon.tsx'
 import { EpicToaster } from './components/ui/sonner.tsx'
 import { illustrationImages } from './images.tsx'
 import appStyles from './styles/app.css?url'
+import fontStylesheetUrl from './styles/font.css?url'
 import proseCssUrl from './styles/prose.css?url'
 import tailwindStyleSheetUrl from './styles/tailwind.css?url'
 import { getUserId, logout } from './utils/auth.server.ts'
@@ -96,6 +98,7 @@ export const links: LinksFunction = () => {
 		//These should match the css preloads above to avoid css as render blocking resource
 		{ rel: 'icon', type: 'image/svg+xml', href: '/favicons/favicon.svg' },
 		{ rel: 'stylesheet', href: tailwindStyleSheetUrl },
+		{ rel: 'stylesheet', href: fontStylesheetUrl },
 		{ rel: 'stylesheet', href: proseCssUrl },
 		{ rel: 'stylesheet', href: appStyles },
 	].filter(Boolean)
@@ -295,6 +298,7 @@ function App() {
 					<nav className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap md:gap-8">
 						{/* <Logo /> */}
 						<Navbar />
+						<DropDown />
 						<div className="ml-auto hidden max-w-sm flex-1 sm:block">
 							{searchBar}
 						</div>
