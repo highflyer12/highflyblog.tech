@@ -99,32 +99,35 @@ export const AnimationTypes = () => {
 	const debouncedVelocity = useDebouncedValue(velocity, 300)
 
 	return (
-		<motion.div
-			key={countSpring}
-			style={{
-				background: 'linear-gradient(90deg,#ffa0ae 0%,#aacaef 75%)',
-				height: '100px',
-				width: '100px',
-				borderRadius: '10px',
-			}}
-			initial={{
-				y: -100,
-			}}
-			animate={
-				inView
-					? {
-							y: 0,
-						}
-					: {
-							y: -100,
-						}
-			}
-			transition={{
-				type: 'spring',
-				stiffness,
-				mass,
-				damping,
-			}}
-		/>
+		<>
+			<motion.div
+				key={countSpring}
+				style={{
+					background: 'linear-gradient(90deg,#ffa0ae 0%,#aacaef 75%)',
+					height: '100px',
+					width: '100px',
+					borderRadius: '10px',
+				}}
+				initial={{
+					y: -100,
+				}}
+				animate={
+					inView
+						? {
+								y: 0,
+							}
+						: {
+								y: -100,
+							}
+				}
+				transition={{
+					type: 'spring',
+					stiffness,
+					mass,
+					damping,
+				}}
+			/>
+			<div className="h-4 w-4 bg-red-500">Hello tailwindcss</div>
+		</>
 	)
 }
