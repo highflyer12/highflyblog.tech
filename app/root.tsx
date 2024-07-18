@@ -25,7 +25,7 @@ import {
 	useSubmit,
 } from '@remix-run/react'
 import { withSentry } from '@sentry/remix'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
 import { type KCDHandle } from '../types/index'
@@ -73,6 +73,12 @@ import { getToast } from './utils/toast.server.ts'
 import { getUserInfo } from './utils/user-info.server.ts'
 import { useOptionalUser, useUser } from './utils/user.ts'
 import logoUrl from '/deer-log.svg'
+import {
+	AnimationCardContent,
+	HighlightedValue,
+} from './components/styled-components.tsx'
+
+import { Range } from '@maximeheckel/design-system'
 
 export const handle: KCDHandle & { id: string } = {
 	id: 'root',
@@ -286,6 +292,8 @@ function App() {
 	const allowIndexing = data.ENV.ALLOW_INDEXING !== 'false'
 	useToast(data.toast)
 
+	const [velocity, setVelocity] = useState(10)
+
 	return (
 		<Document
 			nonce={nonce}
@@ -299,6 +307,19 @@ function App() {
 						{/* <Logo /> */}
 						<Navbar />
 						<DropDown />
+						<Range
+							id="velocity"
+							aria-label="Velocity"
+							label={
+								<span>
+									Velocity: <HighlightedValue>{velocity}</HighlightedValue>
+								</span>
+							}
+							min={1}
+							max={500}
+							value={velocity}
+							onChange={value => setVelocity(value)}
+						/>
 						<div className="ml-auto hidden max-w-sm flex-1 sm:block">
 							{searchBar}
 						</div>

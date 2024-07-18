@@ -1,0 +1,96 @@
+---
+title: My First Interactive Blog
+date: 2024-07-19
+description:
+  An interactive guide introducing everything I've learned about Framer Motion through fun examples and little case studies of animations I built.
+categories:
+  - react
+meta:
+  keywords:
+    - react
+    - javascript
+    - testing
+    - hooks
+    - react hooks testing library
+    - react testing library
+bannerCloudinaryId: unsplash/photo-1563115298-e9585e7943d4
+bannerCredit: Photo by [Grant Durr](https://unsplash.com/photos/21ztbENjzeI)
+---
+
+
+import {AnimationTypes} from './animation-types'
+
+Over the past few months, Framer Motion went from being a fun tool I played with on the side to a core element of my frontend projects when it comes to adding a layer of interaction to my UIs. I went **from knowing almost nothing about animations and transitions**, to being able [to orchestrate more complex animations](https://twitter.com/MaximeHeckel/status/1327647479521701889?s=20) involving lots of elements.
+
+I've shared a lot of the animation work I sprinkled throughout my blog on Twitter, and a lot of you have asked me to share more code snippets. Thus I felt it was time for a little write-up!
+
+In this post, you'll find **a condensed guide containing everything I've learned when it comes to Framer Motion**, the key concepts of animation, and how to use this library to create animations that spark joy **through some interactive examples and widgets**.
+
+<callout-info>
+  To illustrate the concepts we will see in this blog post, which are very visual, **I included a series of editable code snippets/playgrounds and widgets** to allow you to try out some of the core features of Framer Motion within the article itself! The aim was to help the reader understand the concepts by applying them, tweaking some code, visualizing examples.
+
+Regarding the interactive code snippets: You can **edit the code to tweak the animation** at will, and **see the resulting animation on the left pane** (top if you're on mobile).
+
+Let me know what you think of these examples and whether you've learned these Framer Motion concepts faster by doing!
+</callout-info>
+
+## Anatomy of an animation
+
+First, let's take a look at the **main elements that define an animation**. When working on one, whether it's to move an element, changing its shape, or color, I always try to answer the following 3 questions:
+
+1. "Where/how is my element at the beginning?" i.e **the initial state**
+2. "Where it needs to go or which shape it needs to take by the end?" i.e. **the target state**
+3. "How it's going to transition from the initial state to the end state?" i.e. **the transition state**
+
+In the case of Framer motion, the library gives us a `motion` component which takes 3 properties (props) that let us define an answer to the 3 questions above:
+
+- `initial`: the state of our element at mount time.
+
+```js
+  <motion.div
+    ...
+    initial={{
+      x: 0,
+      rotate: 45,
+    }}
+    ...
+  />
+```
+
+- `animate`: the state in which our element will be at the end of the animation.
+
+```js
+  <motion.div
+    ...
+    animate={{
+      x: 50,
+      rotate: 270,
+    }}
+    ...
+  />
+```
+
+- `transition`: how our element goes from the initial state to the target state. This is where we can define which transition type we want to define, delays, or repetitions of the same transition.
+
+```js
+  <motion.div
+    ...
+    transition={{
+      ease: "easeIn",
+      duration: 0.7,
+    }}
+    ...
+  />
+```
+
+There are many types of transitions available in Framer Motion so I added this **little comparative visualization** below for you to see the little nuances between some of the main types and tweak their respective options:
+
+<AnimationTypes />
+
+## Conclusion
+
+To be clear, if I were writing and testing the specific `useUndo` hook, I would
+go with the real-world example usage. I think it makes the best trade-off
+between understandability and coverage of our use cases. But there are
+definitely more complicated hooks where using `@testing-library/react` is more
+useful.
