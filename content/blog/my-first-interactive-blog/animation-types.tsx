@@ -1,8 +1,9 @@
-import { useDebouncedValue, styled } from '@maximeheckel/design-system'
+import { styled } from '@maximeheckel/design-system'
 import { motion } from 'framer-motion'
 
 import React from 'react'
 import { useInView } from 'react-intersection-observer'
+import { useDebounce as useDebouncedValue } from '../shared/use-debounce.ts'
 
 export const TransitionGridWrapper = styled('div', {
 	display: 'grid',
