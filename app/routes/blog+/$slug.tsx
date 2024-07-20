@@ -1,8 +1,8 @@
 /**TODO
  * - 重建slug整个页面
  * - 调整好TOC的布局
- * - sustitude component for mdx
- * - 不同的主题配色
+ * ✓ sustitude component for mdx
+ * - 改变pre的配色
  * - 改写onread，变成阅读量
  * - 完成heart相关动画及音效
  * */

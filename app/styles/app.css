@@ -1,3 +1,4 @@
+/* 定义了一个underlined className的动画 */
 .underlined {
 	position: relative;
 	text-decoration: none !important;
