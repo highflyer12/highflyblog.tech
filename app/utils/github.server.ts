@@ -160,5 +160,5 @@ export async function downloadMdxFileOrDirectory(
 		files = await downloadDirectory(mdxFileOrDirectory)
 	}
 
-	return { entry, files: { ...files, ...sharedFiles } }
+	return { entry, files: [...files, ...sharedFiles] }
 }
