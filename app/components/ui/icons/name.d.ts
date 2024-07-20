@@ -9,6 +9,7 @@ export type IconName =
 	| 'check'
 	| 'chevron-down'
 	| 'clock'
+	| 'copy'
 	| 'cross-1'
 	| 'dots-horizontal'
 	| 'download'

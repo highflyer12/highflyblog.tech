@@ -1,4 +1,12 @@
-//TODO - 调整好TOC的布局
+/**TODO
+ * - 重建slug整个页面
+ * - 调整好TOC的布局
+ * - sustitude component for mdx
+ * - 不同的主题配色
+ * - 改写onread，变成阅读量
+ * - 完成heart相关动画及音效
+ * */
+
 import {
 	type HeadersFunction,
 	json,
@@ -28,6 +36,7 @@ import { getServerTimeHeader } from '../../utils/timing.server'
 import { useRootData } from '../../utils/use-root-data'
 import { markAsRead } from '../action+/mark-as-read'
 import { Heart } from '../../components/heart'
+import MDXComponents from '../../components/mdx/mdx-components'
 
 type CatchData = {
 	recommendations: Array<MdxListItem>
@@ -91,7 +100,14 @@ export default function BlogPostScreen() {
 			</Grid>
 			<div className="flex justify-between">
 				<main className="prose-light dark:prose-dark prose mb-24 ml-8 break-words">
-					<Component />
+					<Component
+						components={
+							{
+								...MDXComponents,
+								// eslint-disable-next-line @typescript-eslint/no-explicit-any
+							} as any
+						}
+					/>
 				</main>
 				<div>
 					<Sidebar toc={toc} />
