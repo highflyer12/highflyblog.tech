@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 
 import React from 'react'
 import { useInView } from 'react-intersection-observer'
-import { useDebounce as useDebouncedValue } from '../shared/use-debounce.ts'
+import { useDebounce as useDebouncedValue } from './components.ts'
 
 export const TransitionGridWrapper = styled('div', {
 	display: 'grid',
