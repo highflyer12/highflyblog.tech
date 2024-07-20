@@ -119,6 +119,8 @@ export async function downloadMdxFileOrDirectory(
 ): Promise<{ entry: string; files: Array<GitHubFile> }> {
 	// mdxFileOrDirectory: content/blog/2018-in-review.mdx 或者 content/blog/aha-testing
 	const mdxFileOrDirectory = `content/${relativeMdxFileOrDirectory}`
+	const sharedDirectory = 'content/blog/shared'
+	const sharedFiles = await downloadDirectory(sharedDirectory)
 
 	// full path = nodePath.dirname + nodePath.basename
 	const parentDir = nodePath.dirname(mdxFileOrDirectory) // 'content/blog'
@@ -158,5 +160,5 @@ export async function downloadMdxFileOrDirectory(
 		files = await downloadDirectory(mdxFileOrDirectory)
 	}
 
-	return { entry, files }
+	return { entry, files: { ...files, ...sharedFiles } }
 }
