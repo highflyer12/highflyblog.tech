@@ -1,8 +1,8 @@
 /**TODO
  * - 重建slug整个页面
  * - 调整好TOC的布局
- * ✓ sustitude component for mdx
- * - 改变pre的配色
+ * ✓ sustitude component for mdx：支持代码复制
+ * - 改变pre的配色、某行高亮、带标题:使用Rehype Pretty这个插件
  * - 改写onread，变成阅读量
  * - 完成heart相关动画及音效
  * */

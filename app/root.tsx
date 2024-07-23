@@ -49,7 +49,7 @@ import { illustrationImages } from './images.tsx'
 import appStyles from './styles/app.css?url'
 import fontStylesheetUrl from './styles/font.css?url'
 import proseCssUrl from './styles/prose.css?url'
-import tailwindStyleSheetUrl from './styles/tailwind.css?url'
+import globalStyleSheetUrl from './styles/global.css?url'
 import { getUserId, logout } from './utils/auth.server.ts'
 import { ClientHintCheck, getHints, useHints } from './utils/client-hints.tsx'
 import { getClientSession } from './utils/client.server.ts'
@@ -103,7 +103,7 @@ export const links: LinksFunction = () => {
 		} as const, // necessary to make typescript happy
 		//These should match the css preloads above to avoid css as render blocking resource
 		{ rel: 'icon', type: 'image/svg+xml', href: '/favicons/favicon.svg' },
-		{ rel: 'stylesheet', href: tailwindStyleSheetUrl },
+		{ rel: 'stylesheet', href: globalStyleSheetUrl },
 		{ rel: 'stylesheet', href: fontStylesheetUrl },
 		{ rel: 'stylesheet', href: proseCssUrl },
 		{ rel: 'stylesheet', href: appStyles },

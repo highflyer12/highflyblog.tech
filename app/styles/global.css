@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* css varibale's real value depends on whether our html element has the dark class name. */
+/* get those value from https://zippystarter.com/tools/shadcn-ui-theme-generator */
+@layer base {
+	:root {
+		/* --font-sans: here if you have one */
+		--font-sans: 'Wotfard', 'Wotfard-fallback';
+		/* --font-mono: here if you got it... */
+		--font-mono: 'League Mono';
+		/* prefixed with foreground because it should look good on the background */
+		/* use HSL (Hue, Saturation, Lightness) format for color definitions.*/
+		--background: 222 69% 95%;
+		--foreground: 222 5% 10%;
+		--card: 222 50% 90%;
+		--card-foreground: 222 5% 15%;
+		--popover: 222 69% 95%;
+		--popover-foreground: 222 95% 10%;
+		--primary: 222 69% 36%;
+		--primary-foreground: 0 0% 100%;
+		--secondary: 222 30% 86%;
+		--secondary-foreground: 0 0% 0%;
+		--muted: 184 30% 86%;
+		--muted-foreground: 222 5% 40%;
+		--accent: 184 30% 86%;
+		--accent-foreground: 222 5% 15%;
+		--destructive: 0 69% 50%;
+		--destructive-foreground: 222 5% 90%;
+		--border: 222 30% 82%;
+		--input: 222 30% 50%;
+		--ring: 222 69% 36%;
+		--radius: 0rem;
+	}
+
+	.dark {
+		--background: 204 50% 5%;
+		--foreground: 204 5% 90%;
+		--card: 204 50% 2%;
+		--card-foreground: 204 5% 90%;
+		--popover: 204 50% 5%;
+		--popover-foreground: 204 5% 90%;
+		--primary: 204 48% 40%;
+		--primary-foreground: 0 0% 100%;
+		--secondary: 204 30% 10%;
+		--secondary-foreground: 0 0% 100%;
+		--muted: 166 30% 15%;
+		--muted-foreground: 204 5% 60%;
+		--accent: 166 30% 15%;
+		--accent-foreground: 204 5% 90%;
+		--destructive: 0 86% 30%;
+		--destructive-foreground: 204 5% 90%;
+		--border: 204 30% 18%;
+		--input: 204 30% 18%;
+		--ring: 204 48% 40%;
+		--radius: 0.5rem;
+	}
+}

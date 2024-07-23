@@ -52,7 +52,7 @@ function NavLink({
 					'underlined hover:text-team-current focus:text-team-current block whitespace-nowrap text-lg font-medium focus:outline-none',
 					{
 						'active text-team-current': isSelected,
-						'text-secondary': !isSelected,
+						'text-muted-foreground': !isSelected,
 					},
 				)}
 				to={to}
