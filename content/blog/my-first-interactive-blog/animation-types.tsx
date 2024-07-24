@@ -28,7 +28,7 @@ export const AnimationTypes = () => {
 	const debouncedVelocity = useDebouncedValue(velocity, 300)
 
 	return (
-		<Card className="h-128 w-64">
+		<Card>
 			<CardHeader>
 				<CardTitle>Spring</CardTitle>
 			</CardHeader>
