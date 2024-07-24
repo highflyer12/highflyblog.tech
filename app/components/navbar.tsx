@@ -49,9 +49,9 @@ function NavLink({
 			<Link
 				prefetch="intent"
 				className={clsx(
-					'underlined hover:text-team-current focus:text-team-current block whitespace-nowrap text-lg font-medium focus:outline-none',
+					'underlined block whitespace-nowrap text-lg font-normal hover:text-primary focus:text-primary focus:outline-none',
 					{
-						'active text-team-current': isSelected,
+						'active text-primary': isSelected,
 						'text-muted-foreground': !isSelected,
 					},
 				)}
@@ -350,13 +350,13 @@ function Navbar() {
 	const avatar = userInfo ? userInfo.avatar : { src: logoUrl, alt: 'avatar' }
 
 	return (
-		<div className="px-5vw py-9 lg:py-12">
+		<div className="px-5vw py-2 lg:py-2">
 			<nav className="max-w-8xl mx-auto flex items-center justify-between text-primary">
 				<div className="flex justify-center gap-4 align-middle">
 					<Link
 						prefetch="intent"
 						to="/"
-						className="underlined block whitespace-nowrap text-2xl font-medium text-primary transition focus:outline-none"
+						className="underlined block whitespace-nowrap text-2xl font-normal text-primary transition focus:outline-none"
 					>
 						<h1>High Fly</h1>
 					</Link>
@@ -379,11 +379,11 @@ function Navbar() {
 						<DarkModeToggle />
 					</div> */}
 
-					<ProfileButton
+					{/* <ProfileButton
 						magicLinkVerified={requestInfo.session.magicLinkVerified}
 						imageUrl={avatar!.src}
 						imageAlt={avatar!.alt}
-					/>
+					/> */}
 				</div>
 			</nav>
 		</div>

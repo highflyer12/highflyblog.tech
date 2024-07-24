@@ -72,13 +72,6 @@ import {
 import { getToast } from './utils/toast.server.ts'
 import { getUserInfo } from './utils/user-info.server.ts'
 import { useOptionalUser, useUser } from './utils/user.ts'
-import logoUrl from '/deer-log.svg'
-import {
-	AnimationCardContent,
-	HighlightedValue,
-} from './components/styled-components.tsx'
-
-import { Range } from '@maximeheckel/design-system'
 
 export const handle: KCDHandle & { id: string } = {
 	id: 'root',
@@ -292,8 +285,6 @@ function App() {
 	const allowIndexing = data.ENV.ALLOW_INDEXING !== 'false'
 	useToast(data.toast)
 
-	const [velocity, setVelocity] = useState(10)
-
 	return (
 		<Document
 			nonce={nonce}
@@ -306,20 +297,7 @@ function App() {
 					<nav className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap md:gap-8">
 						{/* <Logo /> */}
 						<Navbar />
-						<DropDown />
-						<Range
-							id="velocity"
-							aria-label="Velocity"
-							label={
-								<span>
-									Velocity: <HighlightedValue>{velocity}</HighlightedValue>
-								</span>
-							}
-							min={1}
-							max={500}
-							value={velocity}
-							onChange={value => setVelocity(value)}
-						/>
+						{/* <DropDown /> */}
 						<div className="ml-auto hidden max-w-sm flex-1 sm:block">
 							{searchBar}
 						</div>
@@ -341,25 +319,12 @@ function App() {
 				</div>
 
 				<div className="container flex justify-between pb-5">
-					<Logo />
 					<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
 				</div>
 			</div>
 			<EpicToaster closeButton position="top-center" theme={theme} />
 			<EpicProgress />
 		</Document>
-	)
-}
-
-function Logo() {
-	return (
-		<Link to="/" className="group grid leading-snug">
-			<img
-				className="h-16 w-16 rounded-full object-cover"
-				alt={'LOGO'}
-				src={logoUrl}
-			/>
-		</Link>
 	)
 }
 

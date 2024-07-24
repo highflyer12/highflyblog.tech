@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion'
-
 import React from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useDebounce as useDebouncedValue } from './components.ts'
@@ -7,8 +5,6 @@ import { useDebounce as useDebouncedValue } from './components.ts'
 import {
 	Card,
 	CardContent,
-	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from '#app/components/ui/card'
@@ -32,27 +28,27 @@ export const AnimationTypes = () => {
 	const debouncedVelocity = useDebouncedValue(velocity, 300)
 
 	return (
-		<Card>
+		<Card className="h-128 w-64">
 			<CardHeader>
 				<CardTitle>Spring</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<div>
+				<div className="flex flex-col gap-4">
 					<div>
 						<p>Mass: {mass}</p>
 						<Slider defaultValue={[mass]} max={30} step={1} />
 					</div>
 					<div>
-						<p>Mass: {damping}</p>
+						<p>Stiffness: {stiffness}</p>
 						<Slider defaultValue={[stiffness]} max={30} step={1} />
 					</div>
 					<div>
-						<p>Mass: {mass}</p>
+						<p>Damping: {damping}</p>
 						<Slider
 							defaultValue={[damping]}
 							max={30}
 							step={1}
-							value={[damping]}
+							onValueChange={newValue => setDamping(newValue[0])}
 						/>
 					</div>
 				</div>
